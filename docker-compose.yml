@@ -13,6 +13,21 @@ services:
       - ./api/.env
     depends_on:
       - postgres
+      - zookeeper
+      - kafka
+
+  worker:
+    build:
+      context: ./worker
+      dockerfile: ./Dockerfile
+    container_name: worker
+    restart: unless-stopped
+    env_file:
+      - ./worker/.env
+    depends_on:
+      - postgres
+      - zookeeper
+      - kafka
 
   postgres:
     image: postgres:latest
@@ -166,7 +181,41 @@ services:
         max-file: "3"
     depends_on:
       - elasticsearch
-      # - logstash
+
+  zookeeper:
+    build:
+      context: ./infrastructure/zookeeper/
+    container_name: zookeeper
+    ports:
+      - 22181:2181
+    volumes:
+      - zookeeper_data:/bitnami
+    env_file:
+      - ./infrastructure/zookeeper/zookeeper.yml
+
+  kafka:
+    build:
+      context: ./infrastructure/kafka/
+    container_name: kafka
+    ports:
+      - 29092:29092
+    volumes:
+      - kafka_data:/bitnami
+    env_file:
+      - ./infrastructure/kafka/kafka.yml
+    depends_on:
+      - zookeeper
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
+    ports:
+      - 8080:8080
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
 
 volumes:
   elasticsearch:
+  zookeeper_data:
+  kafka_data:

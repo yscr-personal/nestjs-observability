@@ -4,10 +4,8 @@ import * as Sentry from '@sentry/node';
 import '@sentry/tracing';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { HealthModule } from './health/health.module';
-import { PaymentModule } from './payment/payment.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { SentryModule } from './sentry/sentry.module';
-import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -22,8 +20,6 @@ import { UserModule } from './user/user.module';
     }),
     HealthModule,
     PrismaModule,
-    UserModule,
-    PaymentModule,
   ],
 })
 export class AppModule {

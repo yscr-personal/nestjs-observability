@@ -28,7 +28,7 @@ function setupOpenApi(app: INestApplication) {
     .setTitle('Observability Workshop API')
     .setDescription('The API for the Observability Workshop')
     .setVersion('1.0')
-    .addTag('observability-workshop')
+    .addTag('observability-workshop-api')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
